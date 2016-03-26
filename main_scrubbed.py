@@ -3,15 +3,18 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 import datetime
 
+#Authorization
 auth = tweepy.OAuthHandler(consumer, consumersecret)
 auth.set_access_token(access, accesssecret)
 
 api = tweepy.API(auth)
 
+# Declare the name of the file based on the date
 currentfile = str(datetime.date.today().day) + str(datetime.date.today().month) + "tweets.txt"
 
 # currentfile = "tweets.txt"
 
+# ensure that the file exists; create if it doesn't
 try:
     with(open(currentfile, "r")) as f:
         print("TESTED FILE " + currentfile + " SUCCESSFULLY")
@@ -23,6 +26,7 @@ except:
     except:
         print("FILE ERROR ON " + currentfile)
 
+# Where the magic is prepared
 class DCIWListener(StreamListener):
     def on_status(self, status):
         if True:
@@ -39,7 +43,6 @@ class DCIWListener(StreamListener):
         print(str(sys.stderr), 'Timeout...')
         return True # Don't kill the stream
 
-keywords = ['Academy', 'The Academy', 'Blue Devils', '#dci', '@dci', '@DCI', 'Blue Knights', 'Knights', 'Blue Stars', 'Stars', 'Bluecoats', 'Bloo', 'Boston Crusaders', 'Boston', 'The Cadets', 'Cadets', 'cadets', 'the cadets', 'Carolina Crown', 'Carolina', 'Crown', 'Cascades', 'The Cavaliers', 'Cavaliers', 'Colts', 'Crossmen', 'Jersey Surf', 'Surf', 'Madison Scouts', 'The Scouts', 'Mandarins', 'Oregon Crusaders', 'Pacific Crest', 'Crest', 'Phantom Regiment', 'Phantom', 'Pioneer', 'Santa Clara Vanguard', 'SCV', 'Spirit of Atlanta', 'Troopers']
-
+# Where the magic happens
 twitter_stream = Stream(auth, DCIWListener())
 twitter_stream.filter(track=["dci2016"])
