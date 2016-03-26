@@ -1,8 +1,9 @@
+# Words to filter by
 goodwords = ['good','great','awesome','loved','love','go','blew me away']
 badwords = ['sucked','been better',"didn't like",'boring','awful','dull','dumb','lame','disappointed','pedestrian','nauseating','out of tune','flat']
 contwords = ['not','both',"can't","hard",'decide']
 
-keywords = ['Academy', 'The Academy', 'Blue Devils', '#dci', '@dci', '@DCI', 'Blue Knights', 'Knights', 'Blue Stars', 'Stars', 'Bluecoats', 'Bloo', 'Boston Crusaders', 'Boston', 'The Cadets', 'Cadets', 'cadets', 'the cadets', 'Carolina Crown', 'Carolina', 'Crown', 'Cascades', 'The Cavaliers', 'Cavaliers', 'Colts', 'Crossmen', 'Jersey Surf', 'Surf', 'Madison Scouts', 'The Scouts', 'Mandarins', 'Oregon Crusaders', 'Pacific Crest', 'Crest', 'Phantom Regiment', 'Phantom', 'Pioneer', 'Santa Clara Vanguard', 'SCV', 'Spirit of Atlanta', 'Troopers']
+# Score variables
 
 acs = 0
 bds = 0
@@ -41,28 +42,35 @@ def goodeval(text):
 		return 'good'
 	else: return 'cont'
 
+# Where the magic happens - Note that you have to call this and it often doesn't work. Guaranteed way to make it work is just write in a call to the function
 def analysis(tweetfile):
 	tweets = []
 	tweets2 = []
 	tweets3 = []
 	tweetscont = []
+	
+	# read out the tweets, add them to a list
 	with open(tweetfile, "r") as f:
 		curline = f.readline()	
 		while curline != '':
 			tweets.append(curline)
 			curline = f.readline()
-	print("made it")
+	print("made it") # useful
+	
+	# Separate usernames
 	for x in tweets:
 		tweets2.append(x.split("|"))
 	
+	# This takes in a list like [[tweet,user],[tweet,user]] and writes [tweeet,tweet] to tweets3
 	for x in range(0,len(tweets2) - 1):
 		try:
 			if tweets2[x][1] != tweets2[x-1][1]: # attempt to remove multiple votes
 				tweet = str(tweets2[x][0]).lower()
-				tweets3.append(tweet)
+				tweets3.append(tweet) # there's no username anymore
 		except:
 			tweets3.append(str(tweets2[x][0]).lower()) # accounting for the first tweet
 	
+	# corps lists for tweets
 	ac = []
 	bd = []
 	bdb = []
@@ -95,7 +103,7 @@ def analysis(tweetfile):
 	corsg = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	corsb = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	
-	# separating by corps
+	# separating by corps and appending
 	for x in tweets3:
 			if any(y in x for y in ['academy', 'the academy']):
 				ac.append(x)
@@ -146,8 +154,10 @@ def analysis(tweetfile):
 			elif any(y in x for y in ['troopers']):
 				tr.append(x)
 	
+	# tweets the script can't accurately categorize (based on goodeval)
 	contro = []
 	
+	# calling goodeval and tallying scores
 	for x in range(0,len(loc)):
 		for y in loc[x]:
 			temp = goodeval(y)
@@ -157,6 +167,7 @@ def analysis(tweetfile):
 				corsg[x] += 1
 			else: corsb[x] += 1
 	
+	# get user to determine tweets
 	while len(contro) > 1:
 		print("There are undetermined tweets")
 		print(contro[0])
@@ -183,8 +194,10 @@ def analysis(tweetfile):
 			contro = []
 		else: contro = []
 	
+	# percentage of good score
 	percors = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	
+	# determining percent- a better indicator, since more people like Crown than like Pioneer, but we want votes to be fair
 	for x in range(0, len(percors)):
 		try:
 			percors[x] = corsg[x]/(corsg[x]+corsb[x])
