@@ -3,8 +3,8 @@ from tweepy import Stream
 from tweepy.streaming import StreamListener
 import datetime
 
-auth = tweepy.OAuthHandler("nInlDnZsePX4wPkDkzx2xv4Nr", "VJpzpe6rMYEE4qG6QI4ARNH4j4sOvHttnpeUoDAeGNawWfv28m")
-auth.set_access_token("3862054103-VY7yn3ygT4zLOvX9dgA6aV4NztFzASBgDkiwWG2", "a4uMZZLdOPZwGf4AC1YwbiTFGb62msVA77CTTui2XP8tQ")
+auth = tweepy.OAuthHandler(consumer, consumersecret)
+auth.set_access_token(access, accesssecret)
 
 api = tweepy.API(auth)
 
